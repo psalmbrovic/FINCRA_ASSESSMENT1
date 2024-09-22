@@ -63,7 +63,7 @@ class UserAndRole:
 
 
 class Logout:
-    LOGOUT_BUTTON = (By.XPATH, '//*[@id="__next"]/div[1]/div/div/div/div[3]/div[3]/div/div[2]/div[2]/button/span')
+    LOGOUT_BUTTON = (By.XPATH, '//*[@id="__next"]/div/div/div/div/div[3]/div[3]/div/div[1]/div[2]/span[1]')
     SUPPORT = (By.XPATH, '//*[@id="__next"]/div[1]/div/div/div/div[3]/div[3]/div/div[2]/div[1]/a[1]/div/span[2]')
     MY_ACCOUNT = (By.XPATH, '//*[@id="__next"]/div[1]/div/div/div/div[3]/div[3]/div/div[2]/div[1]/a[2]/div/span[2]')
     LOG_OUT = (By.XPATH, '//*[@id="__next"]/div[1]/div/div/div/div[3]/div[3]/div/div[2]/div[2]/button/span')

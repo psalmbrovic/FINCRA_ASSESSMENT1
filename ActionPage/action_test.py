@@ -1,5 +1,8 @@
+import os
 import time
-from selenium.webdriver.common.by import By
+
+
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from Locator_page.locator_test import LoginLocator, OverViewPages, Balance, PayIns, Refund, Conversions, Settlement, \
@@ -9,6 +12,7 @@ from Locator_page.locator_test import LoginLocator, OverViewPages, Balance, PayI
 class LoginPage:
     def __init__(self, driver):
         self.driver = driver
+        self.save_screenshot = driver
 
     def login_url(self, url):
         self.driver.get(url)
@@ -18,36 +22,24 @@ class LoginPage:
             EC.presence_of_element_located(LoginLocator.EMAIL_ADDRESS))
         enter_email.send_keys(email)
 
-    def enter_paasword(self, password):
-        enter_paasword = WebDriverWait(self.driver, 10).until(
+    def enter_password(self, password):
+        enter_password = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(LoginLocator.PASSWORD))
-        enter_paasword.send_keys(password)
+        enter_password.send_keys(password)
 
     def click_login_button(self):
-        click_login_button = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(LoginLocator.LOG_IN))
-        click_login_button.click()
+        try:
+            click_login_button = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(LoginLocator.LOG_IN))
+            click_login_button.click()
+            time.sleep(10)
+        except Exception as e:
+            # Capture screenshot when there is an exception
+            screenshot_path = os.path.join(os.getcwd(), 'error_screenshot.png')
+            self.driver.save_screenshot(screenshot_path)
+            print(f"Screenshot saved at {screenshot_path} due to exception: {e}")
+            raise e  # Re-raise the exception after taking the screenshot
 
-    # def enter_username(self, username):
-    #     enter_username = WebDriverWait(self.driver, 20).until(
-    #         EC.presence_of_element_located(LoginLocator.USERNAME))
-    #     enter_username.send_keys(username)
-    #
-    # def enter_password(self, password):
-    #     enter_password = WebDriverWait(self.driver, 20).until(
-    #         EC.presence_of_element_located(LoginLocator.PASSWORD))
-    #     enter_password.send_keys(password)
-    #
-    # def click_signin_button(self):
-    #     click_signin_button = WebDriverWait(self.driver, 20).until(
-    #         EC.presence_of_element_located(LoginLocator.SIGNIN_BUTTON))
-    #     click_signin_button.click()
-    #
-    # def get_error_message_element1(self):
-    #     error_message_element = WebDriverWait(self.driver, 10).until(
-    #         EC.presence_of_element_located(LoginLocator.ERROR_MESSAGE))
-    #
-    #     return error_message_element
 
 
 class OverViewPage:
@@ -245,11 +237,23 @@ class UserAndRolePage:
 class LogoutPage:
     def __init__(self, driver):
         self.driver = driver
+        #self.actions = ActionChains(self.driver)
+
+    # def click_logout(self):
+    #     click_logout = WebDriverWait(self.driver, 10).until(
+    #         EC.presence_of_element_located(Logout.LOGOUT_BUTTON))
+    #     actions = ActionChains(driver)
+    #     actions.move_to_element(Logout.LOGOUT_BUTTON).perform()
 
     def click_logout(self):
-        click_logout = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(Logout.LOGOUT_BUTTON))
-        click_logout.click()
+        # Wait for the logout button to be present
+        logout_button = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(Logout.LOGOUT_BUTTON)
+        )
+
+        actions = ActionChains(self.driver)
+
+        actions.move_to_element(logout_button).click().perform()
 
     def click_support(self):
         click_support = WebDriverWait(self.driver, 10).until(
