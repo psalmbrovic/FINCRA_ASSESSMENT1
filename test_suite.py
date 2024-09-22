@@ -2,7 +2,8 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from ActionPage.action_test import LoginPage, LoginPage1, AccountPage,AboutPage1, MenuHamburgerPage
+from ActionPage.action_test import LoginPage, OverViewPage, BalancesPage, PayInsPage, RefundPage, ConversionsPage, \
+    SettlementPage, UserAndRolePage, LogoutPage
 
 
 @pytest.fixture(scope="module")
@@ -30,25 +31,24 @@ def driver_setup():
 def login(driver_setup):
     driver = driver_setup
     login_page = LoginPage(driver)
-    login_page.login_url("https://www.firstbankonline.com/")
+    login_page.login_url("https://app.fincra.com/auth/login")
     return login_page
 
 
-def test_login_page_first_bank_demo_website(login):
-    login.click_login()
-    login.click_personal_banking_dropdown()
+def test_login_page_fin_cra_website(login):
+    login.enter_email("abatansamuel@ymail.com")
+    login.enter_paasword("Fr33dom007@FINCRA")
     login.click_login_button()
-    login.enter_username("demo")
-    login.enter_password("demo@123")
-    login.click_signin_button()
-# Verify the error message
-    error_message_element1 = login.get_error_message_element1()
-    error_message = error_message_element1.text
-    assert "Epic sadface: Username and password do not match any user in this service" in error_message, \
-        "Error message does not match expected."
 
-    print("Negative test passed: Username and password do not match any user in this service.")
 
+# # Verify the error message
+#     error_message_element1 = login.get_error_message_element1()
+#     error_message = error_message_element1.text
+#     assert "Epic sadface: Username and password do not match any user in this service" in error_message, \
+#         "Error message does not match expected."
+#
+#     print("Negative test passed: Username and password do not match any user in this service.")
+#
 
 @pytest.fixture(scope="module")
 def driver_setup1():
@@ -61,32 +61,60 @@ def driver_setup1():
     yield driver
     driver.quit()
 
-# @pytest.fixture(scope="module")
-# def driver_setup1():
-#     driver = webdriver.Chrome()
-#     driver.implicitly_wait(20)
-#     driver.maximize_window()
-#     yield driver
-#     driver.quit()
-
 
 @pytest.fixture(scope="module")
-def login_gbp(driver_setup1):
-    driver = driver_setup1
-    login_page = LoginPage1(driver)
-    login_page.login_urls("https://www.firstbankonline.com/")
-    return login_page
+def driver_setup_1():
+    driver = webdriver.Chrome()
+    driver.implicitly_wait(20)
+    driver.maximize_window()
+    yield driver
+    driver.quit()
 
 
-def test_negative_login_on_first_bank_demo_website(login_gbp):
-    login_gbp.enter_username("")
-    login_gbp.enter_password("")
-    login_gbp.click_login_button()
+# @pytest.fixture(scope="module")
+# def login(driver_setup1):
+#     driver = driver_setup1
+#     login_page = LoginPage(driver)
+#     login_page.login_url("https://app.fincra.com/auth/login")
+#     return login_page
 
-    # Verify the error message
-    error_message_element = login_gbp.get_error_message_element()
-    error_message = error_message_element.text
-    assert "Epic sadface: Username and password do not match any user in this service" in error_message, \
-        "Error message does not match expected."
 
-    print("Negative test passed: Username and password do not match any user in this service.")
+def test_negative_test_login_page_fin_cra_website(login):
+    login.enter_email("null")
+    login.enter_paasword("null")
+    login.click_login_button()
+
+
+#
+# @pytest.fixture(scope="module")
+# def over_view(driver_setup):
+#     driver = driver_setup
+#     over_view_page = OverviewPage1(driver)
+#     over_view_page.click_overview()
+#     return over_view_page
+
+
+def test_click_over_view_button_website(login):
+    test_click_over_view_button = OverViewPage(login.driver)
+    test_click_over_view_button.click_overview()
+
+
+def test_click_balance(login):
+    click_balance = BalancesPage(login.driver)
+    click_balance.click_balance()
+
+
+def test_log_out_page(login):
+    click_log_out = LogoutPage(login.driver)
+    click_log_out.click_logout()
+    click_log_out.click_my_account()
+    click_log_out.click_support()
+    click_log_out.click_log_out()
+
+    # # Verify the error message
+    # error_message_element = login.get_error_message_element1()
+    # error_message = error_message_element.text
+    # assert "Epic sadface: Username and password do not match any user in this service" in error_message, \
+    #     "Error message does not match expected."
+    #
+    # print("Negative test passed: Username and password do not match any user in this service.")
